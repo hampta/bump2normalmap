@@ -7,4 +7,4 @@
 - Run: ```python main.py```
 
 
-### For idea thx  @fr3nzymov1337
+For idea thx [fr3nzymov]: https://github.com/fr3nzymov1337
