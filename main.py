@@ -2,6 +2,7 @@ from PIL import Image
 import os
 import platform
 import subprocess
+import shutil
 
 R, G, B, A = 0, 1, 2, 3
 ARCH = platform.architecture()[0]
@@ -28,19 +29,25 @@ def bump2normal(file):
 
 
 def tga2vtf(path, file): 
-    output = f"{path}\\{file}"
-    if not os.path.exists(output):
-        os.mkdir(output)
-    command = [vtfcmd, "-file", f"{path}\\{file}", "-alphaformat", "DXT5", "-output", output]
+    command = [vtfcmd, "-file", f"{path}/{file}", "-format", "DXT5"]
     subprocess.call(command)
 
+def clean(path):
+    if not os.path.exists("output"):
+        os.makedirs("output")
+    for file in os.listdir(path):
+        if file.endswith(".vtf"):
+            shutil.copy(f"{path}/{file}", "output")
+            os.remove(f"{path}/{file}")
+        if file.endswith(".tga"):
+            os.remove(f"{path}/{file}")
 
 def main():
     path = input("Folder: ")
     for file in os.listdir(path):
         if file.endswith(".dds"):
-            bump2normal(f"{path}\\{file}")
+            bump2normal(f"{path}/{file}")
             tga2vtf(path, f"{file[:-4]}.tga")
-            os.remove(f"{path}\\{file[:-4]}.tga")
+    clean(path)
 
 main()
